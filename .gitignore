@@ -1,0 +1,6 @@
+node_modules/
+src/private.json
+src/views
+src/routes
+src/index.js
+yarn.lock
