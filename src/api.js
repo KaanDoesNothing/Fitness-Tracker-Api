@@ -1,26 +1,25 @@
 const koa = require("koa");
 const koaRouter = require("koa-router");
-const koaPug = require("koa-pug");
 const koaBody = require("koa-body");
 const koaCors = require("@koa/cors");
-const koaProxy = require("koa-proxy");
+const proxy = require("koa-proxy");
 const path = require("path");
 const {User, Logs, WorkoutTypes, r} = require("./db");
 const {handleSession} = require("./middleware");
 const {jwtSign, hashPassword, comparePassword} = require("./utils");
 const momentjs = require("moment");
-const proxy = require("koa-proxy");
 const {nutritionClient} = require("./nutrition");
 
 const app = new koa();
-app.keys = ["secret"];
 
 app.use(koaCors());
 app.use(koaBody());
 
-const pug = new koaPug({app: app, viewPath: path.join(__dirname, "/views")});
-
 const router = new koaRouter({prefix: "/api"});
+
+router.get("/", ctx => {
+    ctx.body = {haha: "Seems like you've found the backend!"};
+});
 
 router.get("/test", (ctx) => {
     ctx.body = {test: true};
