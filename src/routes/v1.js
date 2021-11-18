@@ -73,6 +73,7 @@ router.post("/user/workouts", handleSession, async (ctx) => {
     ctx.body = {workouts};
 });
 
+
 router.post("/user/workouts/sorted", handleSession, async (ctx) => {
     let workouts = await Logs.filter({author: ctx.session.email}).orderBy(r.desc("createdAt"));
 
@@ -112,6 +113,12 @@ router.post("/user/workouts/create", handleSession, async (ctx) => {
 
         ctx.body = {success: true};
     }
+});
+
+router.post("/user/workout", handleSession, async (ctx) => {
+    let workout = await Logs.get(ctx.request.body.id);
+
+    ctx.body = {workout};
 });
 
 router.get("/nutrition/search", async (ctx) => {
