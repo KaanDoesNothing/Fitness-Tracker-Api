@@ -12,6 +12,12 @@ app.use(koaBody());
 app.use(router.routes());
 app.use(router.allowedMethods());
 
+app.use((ctx, next) => {
+    ctx.body = {error: "Not Found"};
+
+    next();
+});
+
 // app.use(proxy({
 //     host: "http://localhost:5000/"
 // }));
