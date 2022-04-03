@@ -6,7 +6,7 @@ import * as db from "./db";
 
 db.setup();
 
-import {router as v1} from "./routes/v2";
+import {router as v1} from "./routes/v1";
 import {router as v2} from "./routes/v2";
 
 const app = new koa();
