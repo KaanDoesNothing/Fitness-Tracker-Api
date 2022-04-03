@@ -52,7 +52,7 @@ router.post("/auth/signin", async (ctx: Context) => {
 });
 
 router.post("/user/exercises", handleSession, async (ctx: Context) => {
-    let exercises = await Exercise.find({where: {author: ctx.session.email}, select: {type: true, name: true}});
+    let exercises = await Exercise.find({where: {author: ctx.session.email}});
 
     ctx.body = {exercises};
 });
