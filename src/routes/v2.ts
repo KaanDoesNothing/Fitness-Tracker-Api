@@ -10,7 +10,7 @@ import { nutritionClient } from "../nutrition";
 //@ts-ignore
 export const router = new koaRouter();
 
-router.prefix("/api/v3");
+router.prefix("/api/v2");
 
 router.get("/", (ctx: Context) => {
     ctx.body = {haha: "Seems like you've found the backend!"};
