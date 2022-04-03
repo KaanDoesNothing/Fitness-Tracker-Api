@@ -18,6 +18,8 @@ app.use(v1.middleware());
 app.use(v2.middleware());
 
 app.use((ctx: any, next: any) => {
+    console.log(`User was trying to access: ${ctx.url}`);
+
     ctx.body = {error: "Not Found"};
 
     next();
