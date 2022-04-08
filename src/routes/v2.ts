@@ -6,6 +6,7 @@ import { handleSession } from "../middlware";
 import {Exercise} from "../entities/exercise";
 import {Workout} from "../entities/workout";
 import { nutritionClient } from "../nutrition";
+import {Message} from "../entities/message";
 
 //@ts-ignore
 export const router = new koaRouter();
@@ -132,4 +133,12 @@ router.get("/nutrition/product", async (ctx: Context) => {
     let res = await nutritionClient.findProductByBarcode(query);
 
     ctx.body = {data: res};
+});
+
+router.get("/nutrition/recipes/all", async (ctx: Context) => {
+
+})
+
+router.post("/chat/messages", async (ctx: Context) => {
+    return ctx.body = {messages: await Message.find({order: {createdAt: "ASC"}})};
 });

@@ -2,6 +2,9 @@ import koa from "koa";
 import koaBody from "koa-body";
 import koaCors from "koa-cors";
 
+import http from "http";
+import * as socketIO from "socket.io";
+
 import * as db from "./db";
 
 db.setup();
@@ -25,5 +28,12 @@ app.use((ctx: any, next: any) => {
     next();
 });
 
+import chat from "./chat";
 
-app.listen(5555);
+const server = new http.Server(app.callback());
+const io = new socketIO.Server(server, {cors: {methods: ["GET", "POST"]}});
+
+new chat({io});
+
+
+server.listen(5555);
