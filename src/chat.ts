@@ -44,7 +44,7 @@ export class ChatHandler {
 
                 user = fetched;
 
-                let messages = await Message.find({order: {createdAt: "ASC"}});
+                let messages = await Message.find({order: {createdAt: "ASC"}, take: 10});
 
                 let fetchedMessages = await Promise.all(messages.map(async message => {
                     message = await this.finishMessage({msg: message, author: message.author});
