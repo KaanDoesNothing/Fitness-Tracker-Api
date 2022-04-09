@@ -139,12 +139,12 @@ router.get("/nutrition/product", async (ctx: Context) => {
 router.get("/nutrition/recipes/all", async (ctx: Context) => {
 
 })
-
-router.post("/chat/messages", async (ctx: Context) => {
-    let messages = await Message.find({order: {createdAt: "ASC"}});
-    return ctx.body = {messages: await Promise.all(messages.map(async message => {
-        message = await finishMessage({msg: message, author: message.author});
-
-        return message;
-    }))};
-});
+//
+// router.post("/chat/messages", async (ctx: Context) => {
+//     let messages = await Message.find({order: {createdAt: "ASC"}});
+//     return ctx.body = {messages: await Promise.all(messages.map(async message => {
+//         message = await finishMessage({msg: message, author: message.author});
+//
+//         return message;
+//     }))};
+// });

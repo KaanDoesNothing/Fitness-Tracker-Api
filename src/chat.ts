@@ -35,13 +35,31 @@ export class ChatHandler {
                 this.io.emit("message", msg);
             });
 
-            socket.on("setUser", (data) => {
-                user = jwtDecode(data.token) as User;
+            socket.on("setUser", async (data) => {
+                let decoded = jwtDecode(data.token) as User;
+
+                let fetched = await User.findOne({where: {email: decoded.email }});
+
+                if(!fetched) return;
+
+                user = fetched;
+
+                let messages = await Message.find({order: {createdAt: "ASC"}});
+
+                let fetchedMessages = await Promise.all(messages.map(async message => {
+                    message = await this.finishMessage({msg: message, author: message.author});
+
+                    return message;
+                }));
+
+                socket.emit("setMessages", fetchedMessages);
             });
 
             socket.on("messagedReceived", () => {
                 socket.emit("message", this.systemMessage({content: "You are now connected to the public chat."}));
                 socket.emit("message", this.systemMessage({content: "Keep it friendly."}));
+
+                socket.emit("message", this.systemMessage({content: `${user.username} has connected.`}));
             });
         });
     }
@@ -52,6 +70,16 @@ export class ChatHandler {
             content: content,
             createdAt: Date.now()
         }
+    }
+
+    async finishMessage ({msg, author}: any) {
+        let messageAuthor: User | null = await User.findOne({where: {email: author }});
+
+        if(!messageAuthor) return console.log("Error");
+
+        msg.user = {name: messageAuthor.username};
+
+        return msg;
     }
 }
 
