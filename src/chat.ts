@@ -59,7 +59,7 @@ export class ChatHandler {
                 socket.emit("message", this.systemMessage({content: "You are now connected to the public chat."}));
                 socket.emit("message", this.systemMessage({content: "Keep it friendly."}));
 
-                socket.emit("message", this.systemMessage({content: `${user.username} has connected.`}));
+                this.io.emit("message", this.systemMessage({content: `${user.username} has connected.`}));
             });
         });
     }
