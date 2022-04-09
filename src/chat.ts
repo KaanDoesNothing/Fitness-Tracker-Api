@@ -38,7 +38,20 @@ export class ChatHandler {
             socket.on("setUser", (data) => {
                 user = jwtDecode(data.token) as User;
             });
+
+            socket.on("messagedReceived", () => {
+                socket.emit("message", this.systemMessage({content: "You are now connected to the public chat."}));
+                socket.emit("message", this.systemMessage({content: "Keep it friendly."}));
+            });
         });
+    }
+
+    systemMessage({content}: {content: string}) {
+        return {
+            user: {name: "System"},
+            content: content,
+            createdAt: Date.now()
+        }
     }
 }
 
