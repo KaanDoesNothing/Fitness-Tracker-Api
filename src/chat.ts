@@ -3,7 +3,7 @@ import {jwtDecode} from "./utils";
 import {Message} from "./entities/message";
 import {User} from "./entities/user";
 
-export default class ChatHandler {
+export class ChatHandler {
     private io: Server;
 
     constructor({io}: {io: Server}) {
@@ -26,7 +26,11 @@ export default class ChatHandler {
                     content: msg.content
                 });
 
-                newMSG.save();
+                let res = await newMSG.save();
+
+                msg.createdAt = res.createdAt;
+
+                msg = await finishMessage({msg, author: user.email});
 
                 this.io.emit("message", msg);
             });
@@ -36,4 +40,14 @@ export default class ChatHandler {
             });
         });
     }
+}
+
+export const finishMessage = async ({msg, author}: any) => {
+    let messageAuthor: User | null = await User.findOne({where: {email: author }});
+
+    if(!messageAuthor) return console.log("Error");
+
+    msg.user = {name: messageAuthor.username};
+
+    return msg;
 }

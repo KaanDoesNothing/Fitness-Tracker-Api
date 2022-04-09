@@ -28,12 +28,12 @@ app.use((ctx: any, next: any) => {
     next();
 });
 
-import chat from "./chat";
+import {ChatHandler} from "./chat";
 
 const server = new http.Server(app.callback());
 const io = new socketIO.Server(server, {cors: {methods: ["GET", "POST"]}});
 
-new chat({io});
+new ChatHandler({io});
 
 
 server.listen(5555);

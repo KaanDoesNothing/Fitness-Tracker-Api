@@ -7,6 +7,7 @@ import {Exercise} from "../entities/exercise";
 import {Workout} from "../entities/workout";
 import { nutritionClient } from "../nutrition";
 import {Message} from "../entities/message";
+import { finishMessage } from "../chat";
 
 //@ts-ignore
 export const router = new koaRouter();
@@ -20,7 +21,7 @@ router.get("/", (ctx: Context) => {
 router.post("/auth/signup", async (ctx: Context) => {
     let body = ctx.request.body;
 
-    if(!body.email || !body.password) return ctx.body = {error: "No credentials."};
+    if(!body.email || !body.password || !body.username) return ctx.body = {error: "No credentials."};
 
     let existingUser = await User.findOne({where: {email: body.email}});
 
@@ -29,7 +30,7 @@ router.post("/auth/signup", async (ctx: Context) => {
     let hashedPassword: string | null = await hashPassword(body.password);
     if(!hashedPassword) return ctx.body = {error: "Error hashing password."};
 
-    let user = User.create<User>({email: body.email, password: hashedPassword});
+    let user = User.create<User>({username: body.username, email: body.email, password: hashedPassword});
 
     await user.save();
     console.log(user);
@@ -140,5 +141,10 @@ router.get("/nutrition/recipes/all", async (ctx: Context) => {
 })
 
 router.post("/chat/messages", async (ctx: Context) => {
-    return ctx.body = {messages: await Message.find({order: {createdAt: "ASC"}})};
+    let messages = await Message.find({order: {createdAt: "ASC"}});
+    return ctx.body = {messages: await Promise.all(messages.map(async message => {
+        message = await finishMessage({msg: message, author: message.author});
+
+        return message;
+    }))};
 });

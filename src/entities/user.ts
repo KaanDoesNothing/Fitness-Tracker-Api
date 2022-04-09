@@ -14,6 +14,10 @@ export class User extends BaseEntity {
     @MinLength(1)
     password: string;
 
+    @Column()
+    @MinLength(1)
+    username: string;
+
     @CreateDateColumn()
     createdAt: number;
 }
